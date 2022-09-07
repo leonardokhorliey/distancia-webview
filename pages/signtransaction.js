@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Wallet, Contract } from "../utils/nearconfig";
+import { Wallet, Contract, parseNear } from "../utils/nearconfig";
 
 export default function SignTransaction() {
     const [functionName, setFunctionName] = useState('')
@@ -30,39 +30,133 @@ export default function SignTransaction() {
     })
 
 
-    const handleUpdateExpense = async (args) => {
-        let { expenseId, newDate, newAmount } = args;
-        console.log(newAmount)
-        // setToast("Updating Expense ...");
-        // setIsToastLive(true);
-        try {
-        if (!newAmount) {
-          await Contract(wallet.account()).updateExpenseCompletionDate({expenseId, newDate}); 
-          alert("Other way")
-        } else if (!newDate) {
-          await Contract(wallet.account()).updateExpenseAmount({expenseId, newAmount});
-        } else {
-          await Contract(wallet.account()).updateExpenseCompletionDate({expenseId, newDate});
-          alert("Done date")
-          await Contract(wallet.account()).updateExpenseAmount({expenseId, newAmount});
-          alert("Done amount")
-        } 
+    // const handleUpdateExpense = async (args) => {
+    //     let { expenseId, newDate, newAmount } = args;
+    //     console.log(newAmount)
+    //     // setToast("Updating Expense ...");
+    //     // setIsToastLive(true);
+    //     try {
+    //     if (!newAmount) {
+    //       await Contract(wallet.account()).updateExpenseCompletionDate({expenseId, newDate}); 
+    //       alert("Other way")
+    //     } else if (!newDate) {
+    //       await Contract(wallet.account()).updateExpenseAmount({expenseId, newAmount});
+    //     } else {
+    //       await Contract(wallet.account()).updateExpenseCompletionDate({expenseId, newDate});
+    //       alert("Done date")
+    //       await Contract(wallet.account()).updateExpenseAmount({expenseId, newAmount});
+    //       alert("Done amount")
+    //     } 
         
-        // await getExpenses(wallet);
-        // setIsToastLive(false);
-        alert("Expense updated Successfully");
-        } catch(e) {alert(e.message)}
+    //     // await getExpenses(wallet);
+    //     // setIsToastLive(false);
+    //     alert("Expense updated Successfully");
+    //     } catch(e) {alert(e.message)}
+    // }
+
+
+    const enrollToCourse = async (args) => {
+        let { course_id } = args;
+
+        try {
+            await Contract(wallet.account()).enroll_for_course({ course_id })
+        } catch (e) {
+            alert(e.message);
+        }
+    }
+
+    const mintCertificate = async (args) => {
+        let { course_id, trainee_id, certificate_url, issue_date } = args;
+
+        try {
+            await Contract(wallet.account()).mint_certificate_to_trainee({ course_id, trainee_id, certificate_url, issue_date })
+        } catch (e) {
+            alert(e.message);
+        }
+    }
+
+    const createJob = async (args) => {
+        let { job_id, name, description, skills, wage, number_of_roles, duration } = args;
+
+        if (!duration) {
+            duration = 12;
+        }
+
+        const job_owner = wallet.getAccountId();
+        const ATTACHED_DEPOSIT = parseNear((Number(wage) * Number(duration) * Number(number_of_roles)).toString());
+
+        try {
+            await Contract(wallet.account()).create_job({ 
+                job_id_: job_id, 
+                job_owner, 
+                name, 
+                description_ : description,
+                skills_ : skills,
+                wage: parseNear(wage),
+                number_of_roles : Number(number_of_roles),
+                duration : Number(duration)
+            }, null, ATTACHED_DEPOSIT)
+        } catch (e) {
+            alert(e.message);
+        }
+    }
+
+    const applyToJob = async (args) => {
+        let { job_id } = args;
+
+        try {
+            await Contract(wallet.account()).apply_to_job({ job_id })
+        } catch (e) {
+            alert(e.message);
+        }
+    }
+
+    const confirmEmployment = async (args) => {
+        let { job_id, applicant } = args;
+
+        try {
+            await Contract(wallet.account()).confirm_job_employment({ job_id, applicant })
+        } catch (e) {
+            alert(e.message);
+        }
+    }
+
+    const endEmployment = async (args) => {
+        let { job_id, applicant } = args;
+
+        try {
+            await Contract(wallet.account()).end_job_employment({ job_id, applicant })
+        } catch (e) {
+            alert(e.message);
+        }
+    }
+
+    const payWage = async (args) => {
+        let { job_id, applicant } = args;
+
+        try {
+            await Contract(wallet.account()).pay_wage({ job_id, applicant })
+        } catch (e) {
+            alert(e.message);
+        }
     }
 
     
     const functions = {
-        'get_users' : handleUpdateExpense
+        'enroll' : enrollToCourse,
+        'mint_certificate' : mintCertificate,
+        'create_job' : createJob,
+        'apply_to_job' : applyToJob,
+        'confirm_employment' : confirmEmployment,
+        'pay_wage' : payWage,
+        'end_employment' : endEmployment
     }
 
     const handleConfirm = async () => {
         let args = JSON.parse(parameters)
         console.log(args)
-        const func = functions['get_users']
+        const func = functions[functionName]
+        console.log(func)
         await func(args)
 
         console.log("Done")

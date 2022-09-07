@@ -19,14 +19,18 @@ export const Wallet = async () => {
 
 export const Contract = (account) => {
     const contract_ = new NearAPI.Contract(account,
-        process.env.REACT_APP_CONTRACT_ADDRESS || "expenses.leonard0.testnet",
+        process.env.REACT_APP_CONTRACT_ADDRESS || "ea-kazi.eakazi.testnet",
         {
             viewMethods: [],
-            changeMethods: ["createNewExpense", "getAllExpenses", "updateExpenseCompletionDate", "updateExpenseAmount","removeExpense", "deleteExpense", "clearExpense"],
+            changeMethods: ["create_course", "enroll_for_course", "mint_certificate_to_trainee", "create_job","apply_to_job", "confirm_job_employment", "pay_wage", "end_job_employment"],
             sender: account
         });
 
     return contract_
+}
+
+export const parseNear = (amount) => {
+    return NearAPI.utils.format.parseNearAmount(amount);
 }
 
 
