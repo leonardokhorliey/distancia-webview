@@ -19,10 +19,10 @@ export const Wallet = async () => {
 
 export const Contract = (account) => {
     const contract_ = new NearAPI.Contract(account,
-        process.env.REACT_APP_CONTRACT_ADDRESS || "ea-kazi.eakazi.testnet",
+        process.env.NEAR_PUBLIC_CONTRACT_ADDRESS || "main.distancia.testnet",
         {
             viewMethods: [],
-            changeMethods: ["create_course", "enroll_for_course", "mint_certificate_to_trainee", "create_job","apply_to_job", "confirm_job_employment", "pay_wage", "end_job_employment"],
+            changeMethods: ["get_token_contract_owner", "ad_watched", "get_ads_watched", "get_distancia_price","clear_milestone", "convert_distancia"],
             sender: account
         });
 

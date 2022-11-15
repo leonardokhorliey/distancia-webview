@@ -55,101 +55,45 @@ export default function SignTransaction() {
     // }
 
 
-    const enrollToCourse = async (args) => {
-        let { course_id } = args;
+    const watchAdCompletely = async (args) => {
+        let { amount, ad_key } = args;
 
         try {
-            await Contract(wallet.account()).enroll_for_course({ course_id })
+            await Contract(wallet.account()).ad_watched({ amount, ad_key })
         } catch (e) {
             alert(e.message);
         }
     }
 
-    const mintCertificate = async (args) => {
-        let { course_id, trainee_id, certificate_url, issue_date } = args;
+    const convertDistancia = async (args) => {
+        let { distancia_amount, milestone_cleared } = args;
 
         try {
-            await Contract(wallet.account()).mint_certificate_to_trainee({ course_id, trainee_id, certificate_url, issue_date })
+            await Contract(wallet.account()).convert_distancia({ distancia_amount, milestone_cleared })
         } catch (e) {
             alert(e.message);
         }
     }
 
-    const createJob = async (args) => {
-        let { job_id, name, description, skills, wage, number_of_roles, duration } = args;
+    const clearMilestone = async (args) => {
+        let { distancia_amount } = args;
 
-        if (!duration) {
-            duration = 12;
-        }
-
-        const job_owner = wallet.getAccountId();
-        const ATTACHED_DEPOSIT = parseNear((Number(wage) * Number(duration) * Number(number_of_roles)).toString());
 
         try {
             await Contract(wallet.account()).create_job({ 
-                job_id_: job_id, 
-                job_owner, 
-                name, 
-                description_ : description,
-                skills_ : skills,
-                wage: parseNear(wage),
-                number_of_roles : Number(number_of_roles),
-                duration : Number(duration)
-            }, null, ATTACHED_DEPOSIT)
-        } catch (e) {
-            alert(e.message);
-        }
-    }
-
-    const applyToJob = async (args) => {
-        let { job_id } = args;
-
-        try {
-            await Contract(wallet.account()).apply_to_job({ job_id })
-        } catch (e) {
-            alert(e.message);
-        }
-    }
-
-    const confirmEmployment = async (args) => {
-        let { job_id, applicant } = args;
-
-        try {
-            await Contract(wallet.account()).confirm_job_employment({ job_id, applicant })
-        } catch (e) {
-            alert(e.message);
-        }
-    }
-
-    const endEmployment = async (args) => {
-        let { job_id, applicant } = args;
-
-        try {
-            await Contract(wallet.account()).end_job_employment({ job_id, applicant })
-        } catch (e) {
-            alert(e.message);
-        }
-    }
-
-    const payWage = async (args) => {
-        let { job_id, applicant } = args;
-
-        try {
-            await Contract(wallet.account()).pay_wage({ job_id, applicant })
+                distancia_amount
+                })
         } catch (e) {
             alert(e.message);
         }
     }
 
     
+    
     const functions = {
-        'enroll' : enrollToCourse,
-        'mint_certificate' : mintCertificate,
-        'create_job' : createJob,
-        'apply_to_job' : applyToJob,
-        'confirm_employment' : confirmEmployment,
-        'pay_wage' : payWage,
-        'end_employment' : endEmployment
+        'ad_watched' : watchAdCompletely,
+        'clear_milestone' : clearMilestone,
+        'convert_distancia' : convertDistancia,
     }
 
     const handleConfirm = async () => {
@@ -163,12 +107,12 @@ export default function SignTransaction() {
     }
 
     return (
-        <div>
-            <div>
+        <div id="app-path">
+            <div id="header">
                 <p>Confirm BlockChain Trainsaction</p>
             </div>
 
-            <div>
+            <div id="info-section">
                 <h1>
                     EA-Kazi wants to call a BlockChain transaction with your account. 
                     Please confirm.
