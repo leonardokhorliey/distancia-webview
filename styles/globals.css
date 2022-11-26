@@ -13,4 +13,164 @@ a {
 
 * {
   box-sizing: border-box;
+  margin: 0;
 }
+
+button {
+  height: 50px;
+  width: 100%;
+  padding: 20px auto;
+  background-color: lavender;
+  border: 0px;
+  box-shadow: #888 2px 2px 2px 2px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1.25rem;
+}
+
+#app-path {
+  width: 500px;
+  height: 100vh;
+  margin: auto;
+}
+
+#header {
+  background-color: rgb(27, 27, 83);
+  text-align: center;
+  color: white;
+  height: 65px;
+  padding: 20px;
+}
+
+#info-section {
+
+  padding: 50px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: baseline;
+}
+
+#info-section h1 {
+  text-align: center;
+}
+
+#details-section {
+  margin: 80px 0;
+}
+
+#details-section h3 {
+  font-size: 1.5rem;
+  margin: 0 0 20px 0;
+}
+
+#details-section table {
+  font-size: 1.25rem;
+  width: 460px;
+}
+
+#details-section > table td{
+  padding: 20px 0 20px 20px;
+  color: white;
+}
+
+#fail-connect {
+  width: 280px; 
+  height: 500px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+table tr:nth-child(odd) {
+  background-color: gray;
+
+}
+
+table tr:nth-child(even) {
+  background-color: rgb(75, 72, 72);
+  
+}
+
+#cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 30%;
+}
+
+#cta > button {
+  height: 50px;
+  width: 100%;
+  padding: 20px auto;
+  background-color: lavender;
+  border: 0px;
+  box-shadow: #888 2px 2px 2px 2px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1.25rem;
+}
+
+
+#footer {
+  position: fixed;
+  
+  bottom: 0px;
+  width: 100%;
+  height: 100px;
+  text-align: center;
+  color: white;
+  background-color: rgb(24, 23, 23);
+}
+
+#footer > div {
+  margin: 20px 0 0 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 40px;
+}
+
+
+@media screen and (min-width: 500px) {
+  #app-path {
+    width: 100%;
+    height: 100vh;
+    margin: auto;
+  }
+
+  #info-section {
+    padding: 50px 80px;
+  }
+
+  #footer {
+    
+    width: 100%;
+  
+  }
+
+  #details-section {
+    width: 100%;
+    margin: 80px auto;
+  }
+
+  #details-section h3 {
+    text-align: center;
+  }
+
+  #details-section table {
+    width: 100%;
+  }
+
+  #info-section h1 {
+    text-align: center;
+  }
+
+  #cta  {
+    gap: 50%;
+  }
+  
+}
+

@@ -6,7 +6,7 @@ export const Wallet = async () => {
 
     const keyStore = new keyStores.BrowserLocalStorageKeyStore();
 
-    const config = {...getConfig('testnet'), keyStore}
+    const config = {...getConfig(process.env.NEXT_PUBLIC_ENVIRONMENT || 'testnet'), keyStore}
 
     const near = await connect(config);
 
@@ -19,7 +19,7 @@ export const Wallet = async () => {
 
 export const Contract = (account) => {
     const contract_ = new NearAPI.Contract(account,
-        process.env.NEAR_PUBLIC_CONTRACT_ADDRESS || "main.distancia.testnet",
+        process.env.NEXT_PUBLIC_CONTRACT_ADDRESS || "main.distancia.testnet",
         {
             viewMethods: [],
             changeMethods: ["get_token_contract_owner", "ad_watched", "get_ads_watched", "get_distancia_price","clear_milestone", "convert_distancia"],
