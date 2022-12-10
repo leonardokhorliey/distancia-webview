@@ -26,7 +26,8 @@ export default function ConnectWallet() {
             }
 
             setWallet(tx);
-            await new Axios().post(process.env.NEXT_PUBLIC_WALLET_ADDRESS_ENDPOINT, {
+            const apiUrl = process.env.NEXT_PUBLIC_WALLET_ADDRESS_ENDPOINT;
+            if (apiUrl) await new Axios().post(process.env.NEXT_PUBLIC_WALLET_ADDRESS_ENDPOINT, {
                 user_id: userId,
                 account_id: tx.getAccountId()
             }); 
