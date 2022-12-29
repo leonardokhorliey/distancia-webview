@@ -16,7 +16,7 @@ export default function SignTransaction() {
     const [processing, setProcessing] = useState(false)
     const [doneTransaction, setDoneTransaction] = useState(false);
     const [rejected, setRejected] = useState(false)
-    const [failedTransaction, setFailedTransaction] = useState('');
+    const [failedTransaction, setFailedTransaction] = useState(false);
 
     useEffect(() => {
         const searchParams = new URLSearchParams(window.location.search)
@@ -24,22 +24,24 @@ export default function SignTransaction() {
         setRequiresNear(searchParams.get(requiresNear))
         setParameters(searchParams.get("args"))
 
-        Wallet().then((tx) => {
-            if (!tx.isSignedIn()) {
-                tx.requestSignIn(
-                    process.env.NEXT_PUBLIC_CONTRACT_ADDRESS || "main.distancia.testnet", // contract requesting access
-                    "Distancia App"
-                );
-                return;
-            }
+        console.log(failedTransaction)
 
-            setWallet(tx);
-            setAccountId(tx.getAccountId());
+        // Wallet().then((tx) => {
+        //     if (!tx.isSignedIn()) {
+        //         tx.requestSignIn(
+        //             process.env.NEXT_PUBLIC_CONTRACT_ADDRESS || "main.distancia.testnet", // contract requesting access
+        //             "Distancia App"
+        //         );
+        //         return;
+        //     }
+
+        //     setWallet(tx);
+        //     setAccountId(tx.getAccountId());
             
-        }).catch((e) => {
-            console.log(e.message)
-            setLoggedIn(false);
-        });
+        // }).catch((e) => {
+        //     console.log(e.message)
+        //     setLoggedIn(false);
+        // });
     })
 
 
@@ -118,7 +120,10 @@ export default function SignTransaction() {
 
         } catch (e) {
             alert(e.message);
-            setFailedTransaction(e.message);
+            console.log(e.message)
+            setFailedTransaction(true);
+            setProcessing(false)
+            
         }
         
     }
@@ -138,19 +143,19 @@ export default function SignTransaction() {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <div id="header">
-                <p>Confirm BlockChain Trainsaction</p>
+                <p>Confirm BlockChain Transaction</p>
             </div>
 
-            {doneTransaction || failedTransaction ? <div id="info-section">
+            {doneTransaction || failedTransaction ? <div id="info-section-fail">
                 <h1>
-                    {failedTransaction ? `Transaction Failed with error ${failedTransaction}` : rejected ? 'Transaction Rejected' : 'Transaction Completed'}
+                    {failedTransaction ? `Transaction Failed with error` : rejected ? 'Transaction Rejected' : 'Transaction Completed'}
                 </h1>
 
                 {doneTransaction && <button>
                     OK
                 </button>}
 
-                {failedTransaction && <button onClick={setFailedTransaction(false)}>
+                {failedTransaction && <button onClick={() => setFailedTransaction(false)}>
                     Retry
                 </button>}
 

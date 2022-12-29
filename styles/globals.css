@@ -54,6 +54,16 @@ button {
   margin-top: 65px;
 }
 
+#info-section-fail {
+  padding: 50px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: baseline;
+  margin-top: 65px;
+  min-height: 400px;
+  justify-content: space-between;
+}
+
 #info-section h1 {
   text-align: center;
   font-size: 1.2rem;
@@ -199,9 +209,11 @@ table tr:nth-child(even) {
 }
 
 #toast {
-  position: absolute;
+  position: fixed;
+  z-index: 5;
   top: 20px;
-  right: 5px;
+  right: 10px;
+  width: 150px;
   padding: 20px 10px;
   color: white;
   border-radius: 10px;
