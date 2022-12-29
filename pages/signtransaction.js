@@ -24,8 +24,6 @@ export default function SignTransaction() {
         setRequiresNear(searchParams.get(requiresNear))
         setParameters(searchParams.get("args"))
 
-        console.log(failedTransaction)
-
         Wallet().then((tx) => {
             if (!tx.isSignedIn()) {
                 tx.requestSignIn(
@@ -42,7 +40,7 @@ export default function SignTransaction() {
             console.log(e.message)
             setLoggedIn(false);
         });
-    })
+    }, [])
 
 
     // const handleUpdateExpense = async (args) => {
