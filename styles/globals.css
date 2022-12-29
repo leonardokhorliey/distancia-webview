@@ -30,48 +30,103 @@ button {
 
 #app-path {
   width: 100vw;
-  height: 100vh;
+  height: 150vh;
   margin: auto;
+  background-color: rgb(247, 245, 245);
 }
 
 #header {
   background-color: rgb(27, 27, 83);
   text-align: center;
   color: white;
+  position: fixed;
+  top: 0px;
+  width: 100%;
   height: 65px;
   padding: 20px;
 }
 
 #info-section {
-
   padding: 50px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: baseline;
+  margin-top: 65px;
+}
+
+#info-section h1 {
+  text-align: center;
+  font-size: 1.2rem;
+}
+
+#info-section h4 {
+  text-align: center;
+  font-weight: 300;
+  margin: 50px auto 0;
+}
+
+#details-section {
+  margin: 30px 0;
+  width: 100%;
+}
+
+#details-section h3 {
+  font-size: 1rem;
+  margin: 0 0 20px 0;
+}
+
+/* #details-section table {
+  font-size: 1rem;
+  width: 100%;
+}
+
+#details-section > table td{
+  padding: 10px 10px 10px 10px;
+  color: white;
+  overflow-wrap: break-word;
+}
+
+#details-section > table td:nth-child(even){
+  font-size: 0.5rem;
+} */
+#transaction-details {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: baseline;
+  gap: 30px;
+  border-radius: 8px;
+  background-color: white;
+  padding: 30px 10px;
+}
+
+#transaction-details p {
+  font-size: 0.875rem;
+  color: gray;
+}
+
+#gas-area {
   display: flex;
   flex-direction: column;
   align-items: baseline;
 }
 
-#info-section h1 {
-  text-align: center;
+#gas-area input {
+  padding: 5px;
+  background-color: rgb(247, 245, 245);
+  border-radius: 5px;
+  width: 200px;
+  border: 0px;
+  cursor: text;
 }
 
-#details-section {
-  margin: 80px 0;
+#gas-area a {
+  font-size: 0.6rem;
+  text-decoration: underline;
+  margin-top: 5px;
 }
 
-#details-section h3 {
-  font-size: 1.5rem;
-  margin: 0 0 20px 0;
-}
-
-#details-section table {
-  font-size: 1.25rem;
-  width: 460px;
-}
-
-#details-section > table td{
-  padding: 20px 0 20px 20px;
-  color: white;
-}
 
 #fail-connect {
   width: 200px; 
@@ -107,10 +162,20 @@ table tr:nth-child(even) {
   padding: 20px auto;
   background-color: lavender;
   border: 0px;
-  box-shadow: #888 2px 2px 2px 2px;
+  box-shadow: rgb(233, 231, 231) 2px 2px 2px 2px;
   border-radius: 5px;
   cursor: pointer;
-  font-size: 1.25rem;
+  font-size: 1rem;
+}
+
+#cta > button:nth-child(1) {
+  background-color: rgb(160, 91, 91);
+  color: white;
+}
+
+#cta > button:nth-child(2) {
+  background-color: rgb(4, 65, 46);
+  color: white;
 }
 
 
@@ -137,12 +202,12 @@ table tr:nth-child(even) {
 @media screen and (min-width: 500px) {
   #app-path {
     width: 100%;
-    height: 100vh;
+    min-height: 150vh;
     margin: auto;
   }
 
   #info-section {
-    padding: 50px 80px;
+    padding: 50px 50px;
   }
 
   #footer {

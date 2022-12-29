@@ -21,7 +21,10 @@ export default function ConnectWallet() {
     const connectWallet = (userId) => {
         Wallet().then(async (tx) => {
             if (!tx.isSignedIn()) {
-                tx.requestSignIn();
+                tx.requestSignIn(
+                    process.env.NEXT_PUBLIC_CONTRACT_ADDRESS || "main.distancia.testnet", // contract requesting access
+                    "Distancia App"
+                );
                 return;
             }
 

@@ -33,5 +33,9 @@ export const parseNear = (amount) => {
     return NearAPI.utils.format.parseNearAmount(amount);
 }
 
+export const formatNear = (amount) => {
+    return NearAPI.utils.format.formatNearAmount(amount);
+}
+
 
 

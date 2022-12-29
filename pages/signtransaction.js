@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Wallet, Contract, parseNear } from "../utils/nearconfig";
+import { Wallet, Contract, parseNear, formatNear } from "../utils/nearconfig";
 import Head from "next/head";
 
 
@@ -11,7 +11,9 @@ export default function SignTransaction() {
     const [parameters, setParameters] = useState('')
     const [wallet, setWallet] = useState()
     const [accountId, setAccountId] = useState('')
+    const [gasAmount, setGasAmount] = useState('30')
     const [doneTransaction, setDoneTransaction] = useState(false);
+    const [rejected, setRejected] = useState(false)
     const [failedTransaction, setFailedTransaction] = useState('');
 
     useEffect(() => {
@@ -22,7 +24,10 @@ export default function SignTransaction() {
 
         Wallet().then((tx) => {
             if (!tx.isSignedIn()) {
-                tx.requestSignIn();
+                tx.requestSignIn(
+                    process.env.NEXT_PUBLIC_CONTRACT_ADDRESS || "main.distancia.testnet", // contract requesting access
+                    "Distancia App"
+                );
                 return;
             }
 
@@ -62,10 +67,11 @@ export default function SignTransaction() {
 
 
     const watchAdCompletely = async (args) => {
-        let { amount, ad_key } = args;
+        let { ad_key } = args;
+        let gas = (Number(gasAmount) * 1e12).toString();
 
         try {
-            await Contract(wallet.account()).ad_watched({ amount, ad_key })
+            await Contract(wallet.account()).ad_watched({ ad_key }, gas)
             setDoneTransaction(true);
         } catch (e) {
             alert(e.message);
@@ -74,10 +80,11 @@ export default function SignTransaction() {
     }
 
     const convertDistancia = async (args) => {
-        let { distancia_amount, milestone_cleared } = args;
+        let { distancia_amount } = args;
+        let gas = (Number(gasAmount) * 1e12).toString();
 
         try {
-            await Contract(wallet.account()).convert_distancia({ distancia_amount, milestone_cleared })
+            await Contract(wallet.account()).convert_distancia({ distancia_amount, milestone_cleared: false }, gas)
             setDoneTransaction(true);
         } catch (e) {
             alert(e.message);
@@ -86,13 +93,13 @@ export default function SignTransaction() {
     }
 
     const clearMilestone = async (args) => {
-        let { distancia_amount, milestone_cleared } = args;
-
+        let { milestone_key } = args;
+        let gas = (Number(gasAmount) * 1e12).toString();
 
         try {
             await Contract(wallet.account()).clear_milestone({ 
-                distancia_amount, milestone_cleared
-                })
+                milestone_key
+                }, gas)
                 setDoneTransaction(true);
         } catch (e) {
             alert(e.message);
@@ -109,6 +116,10 @@ export default function SignTransaction() {
     }
 
     const handleConfirm = async () => {
+        if(Number(gasAmount) < 10) {
+            alert("Gas value must be at least 10 Tgas. 35 and above are likely to be optimal.");
+            return;
+        }
         let args = JSON.parse(parameters)
         console.log(args)
         const func = functions[functionName]
@@ -116,6 +127,11 @@ export default function SignTransaction() {
         await func(args)
 
         console.log("Done")
+    }
+
+    const handleReject = async () => {
+        setDoneTransaction(true);
+        setRejected(true)
     }
 
     return (
@@ -131,7 +147,7 @@ export default function SignTransaction() {
 
             {doneTransaction || failedTransaction ? <div id="info-section">
                 <h1>
-                    {failedTransaction ? `Transaction Failed with error ${failedTransaction}` : 'Transaction Completed'}
+                    {failedTransaction ? `Transaction Failed with error ${failedTransaction}` : rejected ? 'Transaction Rejected' : 'Transaction Completed'}
                 </h1>
 
                 {doneTransaction && <button>
@@ -141,43 +157,35 @@ export default function SignTransaction() {
             </div> : 
             <div id="info-section">
                 <h1>
-                    Distancia wants to call a BlockChain transaction with your account. 
-                    Please confirm.
+                    Distancia wants to call a BlockChain transaction with your account.
                 </h1>
+                <h4>Please confirm</h4>
 
                 <div id="details-section">
                     <h3>Transaction Details</h3>
-                    <table>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    Function
-                                </td>
-                                <td>
-                                    {functionName}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    Arguments
-                                </td>
-                                <td>
-                                    {parameters}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    Signer Account Id
-                                </td>
-                                <td>
-                                    {accountId}
-                                </td>
-                            </tr>
-                        </tbody>
-                        
-                    </table>
+                    <div id="transaction-details">
+                        <div>
+                            <h5>Smart Contract Address</h5>
+                            <p>{process.env.NEXT_PUBLIC_CONTRACT_ADDRESS || "main.distancia.testnet"}</p>
+                        </div>
+                        <div>
+                            <h5>Function</h5>
+                            <p>{functionName}</p>
+                        </div>
+                        <div>
+                            <h5>Signer Account Id</h5>
+                            <p>{accountId}</p>
+                        </div>
+                        <div id="gas-area">
+                            <h5>Gas Amount (Tgas)</h5>
+                            <input type="number" name="gas" value={gasAmount} max="300" min="10" onChange={e => setGasAmount(e.target.value)}/>
+                            <a href="https://docs.near.org/concepts/basics/transactions/gas">What is gas?</a>
+                        </div>
 
-                    {requiresNear && 
+                    </div>
+                    
+
+                    {requiresNear === 'T' && 
                     <div>
                         <input type="number" min="0.01" placeholder="Enter value to be sent"/>
                         <select>
@@ -188,11 +196,12 @@ export default function SignTransaction() {
                 </div>
                 
                 <div id="cta">
+                    
+                    <button onClick={handleReject}>
+                        Reject
+                    </button>
                     <button onClick={handleConfirm}>
                         Confirm
-                    </button>
-                    <button onClick={() => wallet.signOut()}>
-                        Reject
                     </button>
                 </div>
 
