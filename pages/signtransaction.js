@@ -26,22 +26,22 @@ export default function SignTransaction() {
 
         console.log(failedTransaction)
 
-        // Wallet().then((tx) => {
-        //     if (!tx.isSignedIn()) {
-        //         tx.requestSignIn(
-        //             process.env.NEXT_PUBLIC_CONTRACT_ADDRESS || "main.distancia.testnet", // contract requesting access
-        //             "Distancia App"
-        //         );
-        //         return;
-        //     }
+        Wallet().then((tx) => {
+            if (!tx.isSignedIn()) {
+                tx.requestSignIn(
+                    process.env.NEXT_PUBLIC_CONTRACT_ADDRESS || "main.distancia.testnet", // contract requesting access
+                    "Distancia App"
+                );
+                return;
+            }
 
-        //     setWallet(tx);
-        //     setAccountId(tx.getAccountId());
+            setWallet(tx);
+            setAccountId(tx.getAccountId());
             
-        // }).catch((e) => {
-        //     console.log(e.message)
-        //     setLoggedIn(false);
-        // });
+        }).catch((e) => {
+            console.log(e.message)
+            setLoggedIn(false);
+        });
     })
 
 
